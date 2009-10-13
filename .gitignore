@@ -13,3 +13,5 @@ pkg
 doc
 
 ## PROJECT::SPECIFIC
+spec/fixtures/db/*.db
+spec/fixtures/log/*.log
