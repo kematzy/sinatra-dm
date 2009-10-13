@@ -10,8 +10,10 @@ begin
     gem.email = "kematzy@gmail.com"
     gem.homepage = "http://github.com/kematzy/sinatra-dm"
     gem.authors = ["kematzy"]
+    gem.add_dependency('sinatra', '>= 0.10.1')
+    gem.add_dependency('dm-core', '>= 0.10.1')
     # gem.add_dependency('dependency', '>=x.x.x')
-    gem.add_development_dependency("rspec")
+    gem.add_development_dependency("sinatra-tests", '>= 0.1.5')
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
 rescue LoadError
@@ -41,7 +43,7 @@ Rake::RDocTask.new do |rdoc|
   version = File.exist?('VERSION') ? IO.read('VERSION').chomp : "[Unknown]"
   
   rdoc.rdoc_dir = 'rdoc'
-  rdoc.title = "sinatra-dm v#{version}"
+  rdoc.title = "Sinatra::DM v#{version}"
   rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
@@ -50,7 +52,7 @@ desc 'Build the rdoc HTML Files'
 task :docs do
   version = File.exist?('VERSION') ? IO.read('VERSION').chomp : "[Unknown]"
     
-  sh "sdoc -N --title 'sinatra-dm v#{version}' lib/"
+  sh "sdoc -N --title 'Sinatra::DM v#{version}' lib/"
 end
 
 namespace :docs do
