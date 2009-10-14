@@ -147,6 +147,12 @@ module Sinatra
       
       app.helpers DataMapperExtension::Helpers
       
+      ## add the extension specific options to those inspectable by :options_inspect method
+      %w( dm_logger_path dm_logger_level database_url 
+      dm_setup_context database ).each do |m|
+        app.sinatra_options_for_inspection << m
+      end
+      
       # QUESTION:: Should this actually be here? 
       # or should I just use the rake tasks
       # 
