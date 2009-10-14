@@ -31,25 +31,8 @@ module Sinatra
         options.database
       end
       
-      
     end #/ Helpers
     
-    
-    ##
-    # TODO: add some comments here
-    #  
-    # ==== Examples
-    # 
-    # 
-    # @api public
-    # def database_migrate!(type = :upgrade)
-    #   case type
-    #   when :migrate
-    #     ::DataMapper.auto_upgrade!
-    #   else
-    #     ::DataMapper.auto_upgrade!
-    #   end
-    # end
     
     ##
     # TODO: add some comments here
@@ -63,6 +46,7 @@ module Sinatra
       # @database = nil  
       set :dm_setup_context, context
       set :database_url, url
+      puts "-- Initiated DataMapper DB [#{database_url.sub(::APP_ROOT, '...')}]"
       database_logger
       database
     end
@@ -94,10 +78,26 @@ module Sinatra
       @database_logger ||= ::DataMapper::Logger.new(dm_logger_path, dm_logger_level)
     end
     
+    ## TODO: Should support real migrations, 
+    
     ##
-    # TODO: Should support real migrations, 
-    # but for now, just a quick check between upgrade! or migrate!
-    # based upon status.
+    # TODO: add some comments here
+    #  
+    # ==== Examples
+    # 
+    # 
+    # @api public
+    # def database_migrate!(type = :upgrade)
+    #   case type
+    #   when :migrate
+    #     ::DataMapper.auto_upgrade!
+    #   else
+    #     ::DataMapper.auto_upgrade!
+    #   end
+    # end
+    
+    ##
+    # TODO: add some comments here
     #  
     # ==== Examples
     # 
@@ -146,6 +146,32 @@ module Sinatra
       # app.set :migrations_log, lambda { STDOUT }
       
       app.helpers DataMapperExtension::Helpers
+      
+      # QUESTION:: Should this actually be here? 
+      # or should I just use the rake tasks
+      # 
+      if app.development?
+        app.get '/install/db/bootstrap' do 
+          out = ""
+          Dir["#{::APP_ROOT}/db/bootstraps/*.sql"].each do |b|
+            db = self.class.database_url.sub('sqlite3://','')
+            `sqlite3 #{db} < #{b}`
+            out << "\t\t<li> -- #{b.sub(::APP_ROOT,'..')} loaded</li>\n"
+          end
+          
+          html = %Q[<div id="main-content">\n]
+          html << %Q[\t<h2>Install :: Database Bootstrapping</h2>\n]
+          html << %Q[\t<p>Loading bootstraps from [ #{::APP_ROOT}/db/bootstraps/ ]</p>\n]
+          html << %Q[\t<ul>\n]
+          html << out
+          html << %Q[\t</ul>\n]
+          html << %Q[\t<p>Bootstrapping finished.</p>\n]
+          html << %Q[\t<p><a href="javascript:history.go(-1);">Go Back</a></p>\n]
+          html << %Q[</div>\n]
+          
+          erb(html)
+        end
+      end
       
     end #/ self.registered
     
