@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{sinatra-dm}
-  s.version = "0.1.0"
+  s.version = "0.1.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["kematzy"]
@@ -25,6 +25,7 @@ Gem::Specification.new do |s|
      "VERSION",
      "lib/sinatra/dm.rb",
      "lib/sinatra/dm/rake.rb",
+     "sinatra-dm.gemspec",
      "spec/dm_model.rb",
      "spec/fixtures/db/.gitignore",
      "spec/fixtures/log/.gitignore",
