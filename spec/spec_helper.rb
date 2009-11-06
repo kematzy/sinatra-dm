@@ -1,4 +1,5 @@
 
+::APP_ROOT = File.join(File.dirname(__FILE__), 'fixtures') 
 
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
@@ -20,7 +21,6 @@ def fixtures_path
   "#{File.dirname(File.expand_path(__FILE__))}/fixtures"
 end
 
-::APP_ROOT = fixtures_path
 
 class MyTestApp < Sinatra::Base
   
