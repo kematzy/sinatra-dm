@@ -15,7 +15,7 @@ module Sinatra
   # 
   module DataMapperExtension 
     
-    VERSION = '0.1.1' unless const_defined?(:VERSION)
+    VERSION = '0.1.2' unless const_defined?(:VERSION)
     def self.version; "Sinatra::DataMapperExtension v#{VERSION}"; end
     
     module Helpers 
