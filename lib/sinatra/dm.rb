@@ -46,7 +46,9 @@ module Sinatra
       # @database = nil  
       set :dm_setup_context, context
       set :database_url, url
-      puts "-- Initiated DataMapper DB [#{database_url.sub(::APP_ROOT, '...')}]"
+      db_type = database_url.split('://').first
+      db_url = database_url.sub(::APP_ROOT, '').sub("#{db_type}://",'')
+      puts "-- - activated DataMapper #{db_type.capitalize} Database at [ #{db_url} ]"
       database_logger
       database
     end
@@ -137,6 +139,7 @@ module Sinatra
     
     
     def self.registered(app)
+      app.set :db_dir, "#{::APP_ROOT}/db"
       app.set :dm_logger_level, :debug
       app.set :dm_logger_path, lambda { "#{::APP_ROOT}/log/dm.#{environment}.log" }
       app.set :dm_setup_context, :default
@@ -148,9 +151,11 @@ module Sinatra
       app.helpers DataMapperExtension::Helpers
       
       ## add the extension specific options to those inspectable by :options_inspect method
-      %w( dm_logger_path dm_logger_level database_url 
-      dm_setup_context database ).each do |m|
-        app.sinatra_options_for_inspection << m
+      if app.respond_to?(:sinatra_options_for_inspection)
+        %w( db_dir dm_logger_path dm_logger_level database_url 
+        dm_setup_context database ).each do |m|
+          app.sinatra_options_for_inspection << m
+        end
       end
       
       # QUESTION:: Should this actually be here? 
