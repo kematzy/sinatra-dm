@@ -1,6 +1,15 @@
 
 namespace :db do 
   
+  namespace :production do
+    
+    desc "Convert development.db into production.db"
+    task :setup do 
+      sh "cp db/development.db db/production.db"
+    end
+  end #/ namespace production
+  
+  
   desc "Backup database to .tar.gz file (=> db:backup:db)"
   task :backup  => ['db:backup:db']
   
@@ -33,10 +42,14 @@ namespace :db do
     unless args.db
       msg = %Q[\nERROR:\n\n  You must define the :db variable like this:\n]
       msg << %Q[  rake db:bootstrap db=db/name-of-database.db\n\n]
-      puts mgs
+      puts msg
     else
       sh "sqlite3 #{args.db} < db/bootstraps/#{args.db.sub(/^db\//,'')}.sql"
       puts "-- DB [ #{args.db}] bootstrapped with [ db/bootstraps/#{args.db.sub(/^db\//,'')}.sql ]l\n\n"
+      # if test(?d, '.git/config')
+      #   sh "git add db/bootstraps/#{args.db.sub(/^db\//,'')}.sql"
+      #   sh %Q{git commit -m "#{Time.now.strftime("%Y-%d-%m at %H:%M:%S")} : updated DB bootstraps for #{args.db}" }
+      # end
     end
     
   end
@@ -49,7 +62,7 @@ namespace :db do
         msg = %Q[\nERROR:\n\n  You must define the DB variable like this:\n]
         msg << %Q[  rake db:bootstrap:new db=db/name-of-database.db\n]
         msg << %Q[  bf=db/bootstraps/name.sql \n\n]
-        puts mgs
+        puts msg
       else
         sh "sqlite3 #{args.db} < #{args.bf}"
         puts "-- created new DB [ #{args.db} ]\n"
