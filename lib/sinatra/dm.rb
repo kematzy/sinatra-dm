@@ -158,36 +158,10 @@ module Sinatra
         end
       end
       
-      # QUESTION:: Should this actually be here? 
-      # or should I just use the rake tasks
-      # 
-      if app.development?
-        app.get '/install/db/bootstrap' do 
-          out = ""
-          Dir["#{::APP_ROOT}/db/bootstraps/*.sql"].each do |b|
-            db = self.class.database_url.sub('sqlite3://','')
-            `sqlite3 #{db} < #{b}`
-            out << "\t\t<li> -- #{b.sub(::APP_ROOT,'..')} loaded</li>\n"
-          end
-          
-          html = %Q[<div id="main-content">\n]
-          html << %Q[\t<h2>Install :: Database Bootstrapping</h2>\n]
-          html << %Q[\t<p>Loading bootstraps from [ #{::APP_ROOT}/db/bootstraps/ ]</p>\n]
-          html << %Q[\t<ul>\n]
-          html << out
-          html << %Q[\t</ul>\n]
-          html << %Q[\t<p>Bootstrapping finished.</p>\n]
-          html << %Q[\t<p><a href="javascript:history.go(-1);">Go Back</a></p>\n]
-          html << %Q[</div>\n]
-          
-          erb(html)
-        end
-      end
-      
     end #/ self.registered
     
   end #/ DataMapperExtension
   
-  register(Sinatra::DataMapperExtension)
+  # register(Sinatra::DataMapperExtension)
   
 end #/ Sinatra
