@@ -12,7 +12,7 @@ describe "Sinatra" do
         class MyTestApp < Sinatra::Base 
           register(Sinatra::DataMapperExtension)
           
-          # need to set this for the logger to function
+          # NOTE:: need to set this for the logger to function
           set :environment, ENV['RACK_ENV'].to_sym || :test
           
           # NOTE:: The database configuration must be set 
