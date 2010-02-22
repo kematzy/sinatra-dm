@@ -109,6 +109,63 @@ describe "Sinatra" do
         end #/ Helpers
         
         
+        describe "Class Methods" do 
+          
+          describe "#database_logger" do 
+            
+            it "should be a DataMapper::Logger Object" do 
+              MyTestApp.database_logger.should be_a_kind_of(DataMapper::Logger)
+            end
+            
+            it "should have the correct log path [../log/dm.< environment >.log]" do 
+              MyTestApp.database_logger.init_args[0].should == "#{fixtures_path}/log/dm.test.log"
+            end
+            
+            it "should write log messages to the log file" do 
+              custom_message = "__DEBUG_CLASS_METHOD_DEFAULT_MESSAGE__ written at [#{Time.now.strftime("%Y-%m-%d %H:%M:%S")}]"
+              MyTestApp.database_logger.debug(custom_message)
+              IO.read(MyTestApp.database_logger.init_args[0]).should match(/#{Regexp.escape(custom_message)}/)
+            end
+            
+          end #/ #database_logger
+          
+          describe "#database" do 
+            
+            it "should return an SQLite3 Adapter" do 
+              MyTestApp.database.should be_a_kind_of(DataMapper::Adapters::Sqlite3Adapter)
+            end
+            
+            it "should be configured with the correct DB path [../db/db.< environment >.db]" do 
+              MyTestApp.database.options['path'].should == "#{fixtures_path}/db/db.test.db"
+            end
+            
+            it "should be configured with the correct setup [:default]" do 
+              MyTestApp.database.name.should == :default
+            end
+            
+          end #/ #database
+          
+          describe "#database=" do 
+            
+            it "should allow changing the DB settings" do 
+              lambda { 
+                MyTestApp.database = "sqlite3://#{fixtures_path}/db/db.class_method.db", :class_method
+              }.should_not raise_error(Exception)
+              MyTestApp.database.options['path'].should == "#{fixtures_path}/db/db.class_method.db"
+              MyTestApp.database.name.should == :class_method
+            end
+            
+            it "should throw ArgumentError when using the wrong syntax ..App.database(vars, vars)" do 
+              lambda { 
+                MyTestApp.database("sqlite3://#{fixtures_path}/db/db.class_method.db", :class_method)
+              }.should raise_error(ArgumentError)
+            end
+            
+          end #/ #database=
+          
+        end #/ Class Methods
+        
+        
         describe "DB Queries" do 
           
           it "should return the data from the database" do 

@@ -16,10 +16,15 @@ module Sinatra
     module Helpers 
       
       ##
-      # TODO: add some comments here
+      # Access to the database settings, should you need them
+      # within your app
       #  
       # ==== Examples
       # 
+      #   if database.name == :default
+      #     # do something...
+      # 
+      #   
       # 
       # @api public
       def database 
@@ -27,10 +32,12 @@ module Sinatra
       end
       
       ##
-      # TODO: add some comments here
+      # Handy alias to the DataMapper logger
       #  
       # ==== Examples
       # 
+      #   db_logger.info("message")
+      #   
       # 
       # @api public/private
       def db_logger
@@ -41,28 +48,46 @@ module Sinatra
     
     
     ##
-    # TODO: add some comments here
+    # Sets the Database DSN connection, and setup name.
     #  
     # ==== Examples
+    #   
+    #   # Default usage is via the set :database setting
+    #   
+    #   set :database, "sqlite3:///path/2/your/app/db/test.db"
+    #   
+    # 
+    # But you can also set the db connection on your App directly via this as a class method
+    # 
+    #   YourApp.database = "sqlite3:///path/2/your/app/db/test.db", :custom_setup_name
     # 
     # 
     # @api public
-    def database=(url, context = :default) 
-      # NOTE:: see note below in :database method 
-      # @database = nil  
-      set :dm_setup_context, context if dm_setup_context.blank?
+    def database=(*args) 
+      if args.first.is_a?(Array)
+        reset_db = true
+        url = args.first[0]
+        context = args.first[1] || dm_setup_context || :default
+      else
+        url = args.first
+        context = dm_setup_context || :default
+      end
+      set :dm_setup_context, context
       set :dm_database_url, url
       db_type = dm_database_url.split('://').first
       db_url = dm_database_url.sub(::APP_ROOT, '').sub("#{db_type}://",'')
       puts "-- - activated DataMapper #{db_type.capitalize} Database at [ #{db_url} ]"
+      database_reset if reset_db
       database_logger
       database
     end
     
     ##
-    # TODO: add some comments here
+    # Provides access to your database setup
     #  
     # ==== Examples
+    # 
+    #   YourApp.database  => returns the whole DataMapper db setup 
     # 
     # 
     # @api public
@@ -71,14 +96,26 @@ module Sinatra
       # when having two Sinatra Apps, each with their own db setup.
       # the instance variable retains only the last setup, so the
       # first setup is overwritten.
-      database ||= ::DataMapper.setup(dm_setup_context, dm_database_url)
+      @database ||= ::DataMapper.setup(dm_setup_context, dm_database_url)
     end
     
-    
     ##
-    # TODO: add some comments here
+    # Resets the current DB setup and connection
     #  
     # ==== Examples
+    # 
+    # 
+    # @api private
+    def database_reset
+      @database = nil
+    end
+    
+    ##
+    # Sets up the DataMapper::Logger instance, caches it and returns it
+    #  
+    # ==== Examples
+    #   
+    #   YourApp.database_logger.debug("Message") => log's message in the log
     # 
     # 
     # @api public
@@ -87,13 +124,13 @@ module Sinatra
       # when having two Sinatra Apps, each with their own db setup.
       # the instance variable retains only the last setup, so the
       # first setup is overwritten.
-      database_logger ||= ::DataMapper::Logger.new(dm_logger_path, dm_logger_level)
+      @database_logger ||= ::DataMapper::Logger.new(dm_logger_path, dm_logger_level)
     end
     
     ## TODO: Should support real migrations, 
     
     ##
-    # TODO: add some comments here
+    # TODO: implement this functionality
     #  
     # ==== Examples
     # 
@@ -109,7 +146,7 @@ module Sinatra
     # end
     
     ##
-    # TODO: add some comments here
+    # TODO: implement this functionality
     #  
     # ==== Examples
     # 
@@ -133,7 +170,7 @@ module Sinatra
     
     
     # ##
-    # # TODO: add some comments here
+    # # TODO: implement this functionality
     # #  
     # # ==== Examples
     # # 
