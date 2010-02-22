@@ -4,13 +4,148 @@ require 'dm-core'
 
 module Sinatra
   
-  # Sinatra DataMapperExtension module
+  # = Sinatra DataMapperExtension module
   # 
-  #  TODO:: Need to write documentation here 
+  # A Sinatra Extension that makes working with DataMapper easier.
+  # 
+  # 
+  # == Installation
+  # 
+  #   #  Add Gemcutter to your RubyGems sources 
+  #   $  gem sources -a http://gemcutter.com
+  # 
+  #   $  (sudo)? gem install sinatra-dm
+  # 
+  # == Dependencies
+  # 
+  # This Gem depends upon the following:
+  # 
+  # === Runtime:
+  # 
+  # * sinatra ( >= 0.10.1 )
+  # * dm-core ( >= 0.10.1 )
+  # 
+  # And a constant named ::APP_ROOT defined in your App, pointing to the root of your app.
+  # 
+  #   # set the root of the whole app
+  #   APP_ROOT = Dir.pwd
+  # 
+  # === Development & Tests:
+  # 
+  # * rspec (>= 1.2.7 )
+  # * rack-test (>= 0.4.1)
+  # * rspec_hpricot_matchers (>= 0.1.0)
+  # * sinatra-tests (>= 0.1.5)
+  # 
+  # === Optional:
+  # 
+  # * kematzy-tasks (>= 0.1.5) # handy Rake tasks for working with SQLite3 DB's
+  # 
+  # 
+  # == Getting Started
+  # 
+  # In your Sinatra app code base, 
+  # 
+  #   require 'sinatra/dm'
+  # 
+  # then in your App declaration,
+  # 
+  # 
+  #   class YourApp < Sinatra::Base 
+  #     register(Sinatra::DataMapperExtension)  # NOTE:: the extension name
+  # 
+  #     # NOTE:: need to ensure this is set this for the logger to function
+  #     set :environment, ENV['RACK_ENV'].to_sym || :test
+  # 
+  #     # NOTE:: The database configuration must be set so 
+  #     # the DataMapper.auto_migrate! / .auto_upgrade! migrations work
+  #     set :database, dm_database_url
+  # 
+  #     ## ROUTES 
+  #     get '/posts' do
+  #       @posts = Post.all
+  #     end
+  # 
+  #   end
+  # 
+  # Most of the above is obvious, but this line...
+  # 
+  #   set :database, dm_database_url
+  # 
+  # ...is perhaps a bit confusing, so let's clarify it.
+  # 
+  # <tt>#dm_database_url</tt> is an Extension setting - (see below) - that contains the whole
+  # SQLite3 DSN string.
+  # 
+  #   "sqlite3:///path/2/your/app/root/db/db.test.db"
+  # 
+  # 
+  # In real terms, you could just as well have written this:
+  # 
+  #   set :database, "sqlite3:///path/2/your/app/root/db/db.test.db"
+  # 
+  # or
+  # 
+  #   set :database, "mysql://username:password@dbhost/db_name"
+  # 
+  #   # if you have MySQL set up **insecurely** on your local workstation
+  #   set :database, "mysql://root:@dbhost/db_name"
+  # 
+  # 
+  # 
+  # == Configuration Options 
+  # 
+  # The following options are available for you to configure your DataMapper setup
+  # 
+  # * <tt>:db_dir</tt> -- sets the path to where your SQLite3 DBs should be.
+  #   (Default: [/full/path/2/your/app/db] )
+  # 
+  # * <tt>:dm_logger_level</tt> -- sets the level at which DataMapper.Logger should log.
+  #   (Default: [:debug] )
+  # 
+  # * <tt>:dm_logger_path</tt> -- sets the path to the log file where DataMapper.Logger should log.
+  #   (Default: [/full/path/2/your/app/log/dm.{environment}.log] )
+  # 
+  # * <tt>:dm_setup_context</tt> -- sets the DataMapper Setup context.
+  #   (Default: [:default] )
+  # 
+  # * <tt>:dm_database_url</tt> -- sets the DSN.
+  #   (Default: ENV['DATABASE_URL'] || "sqlite3://#{db_dir}/db.#{environment}.db" )
+  # 
+  # 
+  # There are many ways in which you can use the above configurations in YourApp. 
+  # 
+  # Here are a few examples:
+  # 
+  #   class YourApp < Sinatra::Base
+  #     register(Sinatra::DataMapperExtension)  # NOTE:: the extension name
+  #     
+  #     <snip...>
+  #     
+  #     # set the db path to outside of your app root
+  #     set :db_dir, "/home/USERNAME/SQLite3-dbs/"
+  #     
+  #     # to only log :warn and above
+  #     set :dm_logger_level, :warn
+  #     
+  #     # set the path to your log files outside of your app root
+  #     set :dm_logger_path, "/var/log/dm.your_app.log"
+  #     
+  #     # use a different Setup context than :default
+  #     set :dm_setup_context, :custom
+  #     
+  #     <snip...>
+  #     
+  #     # NB! Don't forget to set the database configuration
+  #     set :database, dm_database_url
+  #     
+  #   end
+  # 
+  # 
   # 
   module DataMapperExtension 
     
-    VERSION = '0.1.2' unless const_defined?(:VERSION)
+    VERSION = '0.1.3' unless const_defined?(:VERSION)
     def self.version; "Sinatra::DataMapperExtension v#{VERSION}"; end
     
     module Helpers 
@@ -127,6 +262,8 @@ module Sinatra
       @database_logger ||= ::DataMapper::Logger.new(dm_logger_path, dm_logger_level)
     end
     
+    # :nodoc:
+    
     ## TODO: Should support real migrations, 
     
     ##
@@ -166,24 +303,9 @@ module Sinatra
     #   define_method("#{adapter}?") { @database.options['adapter'] == adapter } 
     # end
     
+    # :doc:
+    
   protected
-    
-    
-    # ##
-    # # TODO: implement this functionality
-    # #  
-    # # ==== Examples
-    # # 
-    # # 
-    # # @api public
-    # def create_migrations_table
-    #   database.create_table? :migrations do
-    #     primary_key :id
-    #     text :name, :null => false, :index => true
-    #     timestamp :ran_at
-    #   end
-    # end
-    
     
     def self.registered(app)
       app.set :db_dir, "#{::APP_ROOT}/db"
