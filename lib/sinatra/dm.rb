@@ -1,11 +1,6 @@
 
 require 'sinatra/base'
 require 'dm-core'
-# # require 'dm-migrations'
-# require 'dm-timestamps'
-# require 'dm-validations'
-# require 'dm-serializer'
-# require 'dm-types'
 
 module Sinatra
   
@@ -27,8 +22,19 @@ module Sinatra
       # 
       # 
       # @api public
-      def database
-        options.database
+      def database 
+        settings.database
+      end
+      
+      ##
+      # TODO: add some comments here
+      #  
+      # ==== Examples
+      # 
+      # 
+      # @api public/private
+      def db_logger
+        self.class.database_logger
       end
       
     end #/ Helpers
@@ -41,13 +47,13 @@ module Sinatra
     # 
     # 
     # @api public
-    def database=(url, context = :default)
+    def database=(url, context = :default) 
       # NOTE:: see note below in :database method 
       # @database = nil  
-      set :dm_setup_context, context
-      set :database_url, url
-      db_type = database_url.split('://').first
-      db_url = database_url.sub(::APP_ROOT, '').sub("#{db_type}://",'')
+      set :dm_setup_context, context if dm_setup_context.blank?
+      set :dm_database_url, url
+      db_type = dm_database_url.split('://').first
+      db_url = dm_database_url.sub(::APP_ROOT, '').sub("#{db_type}://",'')
       puts "-- - activated DataMapper #{db_type.capitalize} Database at [ #{db_url} ]"
       database_logger
       database
@@ -60,12 +66,12 @@ module Sinatra
     # 
     # 
     # @api public
-    def database
+    def database 
       # NOTE:: Having an instance variable here, causes problems
       # when having two Sinatra Apps, each with their own db setup.
       # the instance variable retains only the last setup, so the
       # first setup is overwritten.
-      database ||= ::DataMapper.setup(dm_setup_context, database_url)
+      database ||= ::DataMapper.setup(dm_setup_context, dm_database_url)
     end
     
     
@@ -76,8 +82,12 @@ module Sinatra
     # 
     # 
     # @api public
-    def database_logger
-      @database_logger ||= ::DataMapper::Logger.new(dm_logger_path, dm_logger_level)
+    def database_logger 
+      # NOTE:: Having an instance variable here, causes problems
+      # when having two Sinatra Apps, each with their own db setup.
+      # the instance variable retains only the last setup, so the
+      # first setup is overwritten.
+      database_logger ||= ::DataMapper::Logger.new(dm_logger_path, dm_logger_level)
     end
     
     ## TODO: Should support real migrations, 
@@ -143,7 +153,7 @@ module Sinatra
       app.set :dm_logger_level, :debug
       app.set :dm_logger_path, lambda { "#{::APP_ROOT}/log/dm.#{environment}.log" }
       app.set :dm_setup_context, :default
-      app.set :database_url, lambda { ENV['DATABASE_URL'] || "sqlite3://#{::APP_ROOT}/db/#{environment}.db" }
+      app.set :dm_database_url, lambda { ENV['DATABASE_URL'] || "sqlite3://#{db_dir}/db.#{environment}.db" }
       
       # app.set :migrations_table_name, :migrations
       # app.set :migrations_log, lambda { STDOUT }
@@ -152,7 +162,7 @@ module Sinatra
       
       ## add the extension specific options to those inspectable by :options_inspect method
       if app.respond_to?(:sinatra_options_for_inspection)
-        %w( db_dir dm_logger_path dm_logger_level database_url 
+        %w( db_dir dm_logger_path dm_logger_level dm_database_url 
         dm_setup_context database ).each do |m|
           app.sinatra_options_for_inspection << m
         end
