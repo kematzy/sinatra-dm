@@ -36,6 +36,23 @@ end
 
 task :spec => :check_dependencies
 
+namespace :spec do
+
+  desc "Run all specifications quietly"
+  Spec::Rake::SpecTask.new(:quiet) do |t|
+    t.libs << "lib"
+    t.spec_opts = ["--color", "--require", "spec/spec_helper.rb"]
+  end
+  
+  desc "Run specific spec (SPEC=/path/2/file)"
+  Spec::Rake::SpecTask.new(:select) do |t|
+    t.libs << "lib"
+    t.spec_files = [ENV["SPEC"]]
+    t.spec_opts = ["--color", "--format", "specdoc", "--require", "spec/spec_helper.rb"] 
+  end
+  
+end
+
 task :default => :spec
 
 require 'rake/rdoctask'
