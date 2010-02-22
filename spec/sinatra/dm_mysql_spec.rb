@@ -7,7 +7,7 @@ describe "Sinatra" do
     
     describe "when using a MySQL db" do 
       
-      class MyTestApp < Sinatra::Base 
+      class MySQLTestApp < Sinatra::Base 
         register(Sinatra::DataMapperExtension)
         
         # NOTE:: :dm_logger_level & :dm_logger_path must be set before :database 
@@ -28,7 +28,7 @@ describe "Sinatra" do
       
       before(:each) do 
         class ::Test::Unit::TestCase 
-          def app; ::MyTestApp.new ; end
+          def app; ::MySQLTestApp.new ; end
         end
         @app = app
         
@@ -45,23 +45,23 @@ describe "Sinatra" do
       describe "Configurations" do 
         
         it "should set :db_dir to [../db]  (NB! unused value when using MySQL)" do 
-          MyTestApp.db_dir.should == "#{fixtures_path}/db"
+          MySQLTestApp.db_dir.should == "#{fixtures_path}/db"
         end
         
         it "should set :dm_logger_level to :debug" do 
-          MyTestApp.dm_logger_level.should == :debug
+          MySQLTestApp.dm_logger_level.should == :debug
         end
         
         it "should set :dm_logger_path to [../log/dm.mysql_test_app.log]" do 
-          MyTestApp.dm_logger_path.should == "#{fixtures_path}/log/dm.mysql_test_app.log"
+          MySQLTestApp.dm_logger_path.should == "#{fixtures_path}/log/dm.mysql_test_app.log"
         end
         
         it "should set :dm_setup_context to :default" do 
-          MyTestApp.dm_setup_context.should == :default
+          MySQLTestApp.dm_setup_context.should == :default
         end
         
         it "should set :dm_database_url to [mysql://]" do 
-          MyTestApp.dm_database_url.should == "mysql://root:@localhost/sinatra_dm_tests"
+          MySQLTestApp.dm_database_url.should == "mysql://root:@localhost/sinatra_dm_tests"
         end
         
       end #/ Configurations
