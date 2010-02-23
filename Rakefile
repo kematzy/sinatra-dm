@@ -14,7 +14,7 @@ begin
     gem.add_dependency('dm-core', '>= 0.10.1')
     gem.add_dependency('kematzy-tasks', '>= 0.1.0')
     # gem.add_dependency('dependency', '>=x.x.x')
-    gem.add_development_dependency("sinatra-tests", '>= 0.1.5')
+    gem.add_development_dependency("sinatra-tests", '>= 0.1.6')
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
 rescue LoadError

@@ -4,10 +4,22 @@
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 
-require 'rubygems'
-require 'sinatra/dm'
-require 'sinatra/tests'
-require 'dm-core'
+#--
+# DEPENDENCIES
+#++
+%w( 
+sinatra/base 
+dm-core
+).each {|lib| require lib }
+
+#--
+## SINATRA EXTENSIONS
+#++
+%w(
+sinatra/dm
+sinatra/tests
+).each {|ext| require ext }
+
 
 ENV['RACK_ENV'] = 'test'
 
@@ -15,7 +27,7 @@ ENV['RACK_ENV'] = 'test'
 Spec::Runner.configure do |config|
   config.include RspecHpricotMatchers
   config.include Sinatra::Tests::TestCase
-  config.include Sinatra::Tests::SharedSpecs
+  config.include Sinatra::Tests::RSpec::SharedSpecs
 end
 
 def fixtures_path 
