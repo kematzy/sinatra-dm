@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["kematzy"]
-  s.date = %q{2010-02-22}
+  s.date = %q{2010-02-23}
   s.description = %q{Sinatra Extension for working with DataMapper (another Sinatra-Sequel Rip-off)}
   s.email = %q{kematzy@gmail.com}
   s.extra_rdoc_files = [
@@ -36,7 +36,7 @@ Gem::Specification.new do |s|
   s.homepage = %q{http://github.com/kematzy/sinatra-dm}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.3.5}
+  s.rubygems_version = %q{1.3.6}
   s.summary = %q{Sinatra Extension for working with DataMapper}
   s.test_files = [
     "spec/dm_bootstrap.rb",
@@ -53,18 +53,18 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<sinatra>, [">= 0.10.1"])
       s.add_runtime_dependency(%q<dm-core>, [">= 0.10.1"])
       s.add_runtime_dependency(%q<kematzy-tasks>, [">= 0.1.0"])
-      s.add_development_dependency(%q<sinatra-tests>, [">= 0.1.5"])
+      s.add_development_dependency(%q<sinatra-tests>, [">= 0.1.6"])
     else
       s.add_dependency(%q<sinatra>, [">= 0.10.1"])
       s.add_dependency(%q<dm-core>, [">= 0.10.1"])
       s.add_dependency(%q<kematzy-tasks>, [">= 0.1.0"])
-      s.add_dependency(%q<sinatra-tests>, [">= 0.1.5"])
+      s.add_dependency(%q<sinatra-tests>, [">= 0.1.6"])
     end
   else
     s.add_dependency(%q<sinatra>, [">= 0.10.1"])
     s.add_dependency(%q<dm-core>, [">= 0.10.1"])
     s.add_dependency(%q<kematzy-tasks>, [">= 0.1.0"])
-    s.add_dependency(%q<sinatra-tests>, [">= 0.1.5"])
+    s.add_dependency(%q<sinatra-tests>, [">= 0.1.6"])
   end
 end
 
