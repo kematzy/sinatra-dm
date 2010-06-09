@@ -3,6 +3,7 @@ require 'rake'
 
 begin
   require 'jeweler'
+  
   Jeweler::Tasks.new do |gem|
     gem.name = "sinatra-dm"
     gem.summary = %Q{Sinatra Extension for working with DataMapper}
@@ -10,13 +11,14 @@ begin
     gem.email = "kematzy@gmail.com"
     gem.homepage = "http://github.com/kematzy/sinatra-dm"
     gem.authors = ["kematzy"]
-    gem.add_dependency('sinatra', '>= 0.10.1')
-    gem.add_dependency('dm-core', '>= 0.10.1')
-    gem.add_dependency('kematzy-tasks', '>= 0.1.0')
+    gem.add_dependency('sinatra')
+    gem.add_dependency('dm-core', '1.0.0')
+    gem.add_dependency('kematzy-tasks')
     # gem.add_dependency('dependency', '>=x.x.x')
-    gem.add_development_dependency("sinatra-tests", '>= 0.1.6')
-    # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
+    gem.add_development_dependency("sinatra-tests", '0.1.6')
+    gem.add_development_dependency('dm-migrations', '1.0.0')
   end
+  
 rescue LoadError
   puts "Jeweler (or a dependency) not available. Install it with: sudo gem install jeweler"
 end
