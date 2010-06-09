@@ -1,5 +1,4 @@
 
-require 'sinatra/base'
 require 'dm-core'
 
 module Sinatra
@@ -331,6 +330,6 @@ module Sinatra
     
   end #/ DataMapperExtension
   
-  # register(Sinatra::DataMapperExtension)
+  register(Sinatra::DataMapperExtension)
   
 end #/ Sinatra
