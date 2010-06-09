@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{sinatra-dm}
-  s.version = "0.1.3"
+  s.version = "0.1.4"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["kematzy"]
-  s.date = %q{2010-02-23}
+  s.date = %q{2010-06-09}
   s.description = %q{Sinatra Extension for working with DataMapper (another Sinatra-Sequel Rip-off)}
   s.email = %q{kematzy@gmail.com}
   s.extra_rdoc_files = [
@@ -50,21 +50,24 @@ Gem::Specification.new do |s|
     s.specification_version = 3
 
     if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<sinatra>, [">= 0.10.1"])
-      s.add_runtime_dependency(%q<dm-core>, [">= 0.10.1"])
-      s.add_runtime_dependency(%q<kematzy-tasks>, [">= 0.1.0"])
-      s.add_development_dependency(%q<sinatra-tests>, [">= 0.1.6"])
+      s.add_runtime_dependency(%q<sinatra>, [">= 0"])
+      s.add_runtime_dependency(%q<dm-core>, ["= 1.0.0"])
+      s.add_runtime_dependency(%q<kematzy-tasks>, [">= 0"])
+      s.add_development_dependency(%q<sinatra-tests>, ["= 0.1.6"])
+      s.add_development_dependency(%q<dm-migrations>, ["= 1.0.0"])
     else
-      s.add_dependency(%q<sinatra>, [">= 0.10.1"])
-      s.add_dependency(%q<dm-core>, [">= 0.10.1"])
-      s.add_dependency(%q<kematzy-tasks>, [">= 0.1.0"])
-      s.add_dependency(%q<sinatra-tests>, [">= 0.1.6"])
+      s.add_dependency(%q<sinatra>, [">= 0"])
+      s.add_dependency(%q<dm-core>, ["= 1.0.0"])
+      s.add_dependency(%q<kematzy-tasks>, [">= 0"])
+      s.add_dependency(%q<sinatra-tests>, ["= 0.1.6"])
+      s.add_dependency(%q<dm-migrations>, ["= 1.0.0"])
     end
   else
-    s.add_dependency(%q<sinatra>, [">= 0.10.1"])
-    s.add_dependency(%q<dm-core>, [">= 0.10.1"])
-    s.add_dependency(%q<kematzy-tasks>, [">= 0.1.0"])
-    s.add_dependency(%q<sinatra-tests>, [">= 0.1.6"])
+    s.add_dependency(%q<sinatra>, [">= 0"])
+    s.add_dependency(%q<dm-core>, ["= 1.0.0"])
+    s.add_dependency(%q<kematzy-tasks>, [">= 0"])
+    s.add_dependency(%q<sinatra-tests>, ["= 0.1.6"])
+    s.add_dependency(%q<dm-migrations>, ["= 1.0.0"])
   end
 end
 
