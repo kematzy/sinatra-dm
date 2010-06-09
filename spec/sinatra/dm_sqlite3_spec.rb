@@ -71,7 +71,7 @@ describe "Sinatra" do
           describe "#database" do 
             
             it "should return an SQLite3 Adapter" do 
-              app.database.should be_a_kind_of(DataMapper::Adapters::Sqlite3Adapter)
+              app.database.should be_a_kind_of(DataMapper::Adapters::SqliteAdapter)
             end
             
             it "should be configured with the correct DB path [../db/db.< environment >.db]" do 
@@ -132,7 +132,7 @@ describe "Sinatra" do
           describe "#database" do 
             
             it "should return an SQLite3 Adapter" do 
-              MyTestApp.database.should be_a_kind_of(DataMapper::Adapters::Sqlite3Adapter)
+              MyTestApp.database.should be_a_kind_of(DataMapper::Adapters::SqliteAdapter)
             end
             
             it "should be configured with the correct DB path [../db/db.< environment >.db]" do 
@@ -248,7 +248,7 @@ describe "Sinatra" do
           describe "#database" do 
             
             it "should return an SQLite3 Adapter" do 
-              app.database.should be_a_kind_of(DataMapper::Adapters::Sqlite3Adapter)
+              app.database.should be_a_kind_of(DataMapper::Adapters::SqliteAdapter)
             end
             
             it "should be configured with the correct DB path [../db/db.my_custom_test_app.db]" do 

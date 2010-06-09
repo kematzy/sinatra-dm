@@ -10,6 +10,7 @@ $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 %w( 
 sinatra/base 
 dm-core
+dm-migrations
 ).each {|lib| require lib }
 
 #--
